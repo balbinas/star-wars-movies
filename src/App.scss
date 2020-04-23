@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 .App {
   text-align: center;
 }
@@ -34,5 +36,19 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.movies {
+  display: block;
+  .movie {
+    display: block;
+    position: relative;
+    border: solid 2px black;
+    .poster {
+      img {
+        max-height: 300px;
+      }
+    }
   }
 }
