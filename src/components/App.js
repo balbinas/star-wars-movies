@@ -15,7 +15,8 @@ class App extends Component {
         this.movieSearch = 'Star+Wars'
         this.state = {
           moviesList: [],
-          OGmovies: []
+          OGmovies: [],
+          yearsList: []
       };
         axios.get(`https://www.omdbapi.com/?apikey=${this.apiKey}&s=${this.movieSearch}&type=movie`)
           .then(res => res.data)
@@ -82,7 +83,6 @@ class App extends Component {
           <Row className="justify-content-md-center">
             <Col xs={7}>
               {moviesList.map(movie => (<Movie movieID={movie} key={movie} />))}
-
             </Col>
           </Row>
          </Container>
