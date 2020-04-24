@@ -4,50 +4,94 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+button.decades.btn.btn-light {
+  font-weight: bold;
+  color: #61696C;
+  border:1px solid #C2C9CF;
+  &:active, &:focus {
+    color: #fff;
+    background-color: #2471C0;
+    border: none;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.movie-card-container {
+  background-color: #E8EAED;
+  border-radius: 10px;
+  border: 2px solid;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin: 0 auto 50px;
+  padding: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.image-container {
+    flex: 1;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.image img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
 }
 
-.movies {
+.movie-info {
   display: block;
-  .movie {
-    display: block;
+  flex: 3 1;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  text-align: left;
+  padding-left: 20px;
+  z-index: 1;
+
+  h5 {
+    margin: 0 0 5px;
+    padding: 0 0 5px;
+    border-bottom: 1px solid #8D979D;
+    font-weight: bold;
+  }
+
+  p {
+      font-size: 14px;
+      margin: 10px 0;
+      width: 100%;
+      text-align: justify;
+  }
+  .tags-container {
+      position: relative;
+      
+      span {
+          border: 1px solid #8D979D;
+          color: #8D979D;
+          border-radius: 4px;
+          display: inline-block;
+          font-size: 14px;
+          padding: 3px 10px;
+          &.release {
+            color: #303435;
+            border: transparent;
+            right: 0;
+            position: absolute;
+          }
+          &.runtime {
+            color: #303435;
+            border: transparent;
+          }
+      }
+  }
+
+  .visit-button {
     position: relative;
-    border: solid 2px black;
-    .poster {
-      img {
-        max-height: 300px;
+    a {
+      background-color: #F6B34F;
+      color: #fff;
+      position: absolute;
+      right: 0;
+      padding: 5px 30px;
+      font-weight: bold;
+      &:active {
+        color: #fff;
       }
     }
   }

@@ -1,173 +1,95 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import './../App.scss';
+import Movie from './Movie';
+import axios from 'axios';
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Button from 'react-bootstrap/Button';
-import axios from 'axios';
-import MovieList from './MovieList';
-// import MovieInfo from './MovieInfo';
-
-// function App() {
-  
-
-//   constructor() {
-//     super()
-//     this.state = {
-//       movies: [],
-//       year: 1970
-//     }
-//     this.apiKey = process.env.REACT_APP_API;
-//     // fetch(`http://www.omdbapi.com/?s=Star+Wars&apikey=${this.apiKey}`)
-//     // .then(data => data.json())
-//     // .then(data => {
-//     //   this.setState({ movies: [...data.results]})
-//     // })
-//     const [books, setBooks] = . useState(null);
-//     const apiURL = 'http://www.omdbapi.com/?s=Star+Wars&apikey=217a5d88'
-//     const fetchData = async () => {
-//       const response = await axios.get(apiURL)
-  
-//       setBooks(response.data) 
-//     }
-//   }
-
-//   handleClick() {
-    
-    
-//     // fetch(`http://www.omdbapi.com/?s=Star+Wars&apikey=217a5d88`)
-//     // .then(data => data.json())
-//     // .then(data => {
-//     //   console.log(data)
-//     //   // this.setState({ movies: [...data.Search]})
-//     // })
-//     // e.preventDefault()
-//     // const years = this.state.squares.slice();
-//     // if(years == '70') {
-//     //     return;
-//     // }
-//     // squares[i] = this.state.xIsNext ? 'X' : 'O';
-//     // this.setState({
-//     //     squares: squares,
-//     //     xIsNext: !this.state.xIsNext,
-//     // })
-//     // for(let j=0; j<10; j++) {
-//     //   `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}&language=en-US&page=${this.state.currentPage}`
-//     // }
-// }
-
-//   // render (){
-//     return (
-//     <div className="App">
-//       <h1>Star Wars Movies</h1>
-//       <ButtonGroup aria-label="Basic example">
-//         <Button variant="light" onClick={fetchData}>1970's</Button>
-//         <Button variant="light">1980's</Button>
-//         <Button variant="light">1990's</Button>
-//         <Button variant="light">2000's</Button>
-//         <Button variant="light">2010's</Button>
-//       </ButtonGroup>
-//     )
-//   // }
-// }
-
-// export default App;
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 class App extends Component {
   constructor(){
-    super()
-    this.state = {
-      movies: []
+        super()
+        this.apiKey = process.env.REACT_APP_API
+        this.movieSearch = 'Star+Wars'
+        this.state = {
+          moviesList: [],
+          OGmovies: []
+      };
+        axios.get(`https://www.omdbapi.com/?apikey=${this.apiKey}&s=${this.movieSearch}&type=movie`)
+          .then(res => res.data)
+          .then(res => {
+              if (!res.Search) {
+                  this.setState({ moviesList: [] });
+                  return;
+              }
+              const yearsList = res.Search.map(movie => parseInt(movie.Year));
+              const moviesList = res.Search.map(movie => movie.imdbID);
+              const OGmovies = moviesList;
+              this.setState({
+                  moviesList,
+                  OGmovies,
+                  yearsList
+              });
+          });
+      }
+
+  filter(decade) {
+    const moviesList = [];
+    this.setState({ moviesList })
+    const { OGmovies, yearsList } = this.state;
+    if(decade == 0) {
+      for(let j=0; j<10; j++) {
+        moviesList.push(this.state.OGmovies[j]);
+        this.setState({ moviesList });
+      }
+    } else {
+      for(let i=0; i<10; i++) {
+        let y = decade + i;
+        for(let j=0; j<10; j++) {
+          if(yearsList[j] == y) {
+            moviesList.push(this.state.OGmovies[j]);
+            this.setState({ moviesList });
+          }
+        }
+      }
     }
-    this.apiKey = process.env.REACT_APP_API
   }
-
-  fetchData = async () => { 
-    fetch(`http://www.omdbapi.com/?s=Star+Wars&apikey=${this.apiKey}`)
-    .then(data => data.json())
-    .then(data => {
-      this.setState({ movies: data.Search})
-      console.log(data)
-    })
-  }
-
-  // const [movies, setMovies] = useState(null);
-
-  // const fetchData = async () => {
-  //   const response = await axios.get(
-  //     ''
-  //   )
-  //   .then(response => response.data.Search.map( movie => ({
-  //     title: `${movie.Title}`,
-  //     year: `${movie.Year}`,
-  //     poster: `${movie.Poster}`,
-  //     imdb: `${movie.imdbID}`
-  //   }))
-  //   )
-
-  //   setMovies(response)
-  //   console.log(response)
-  // };
 
   render() {
+      const { moviesList } = this.state;
 
-  return (
-    <div className="App">
-      <h1>Star Wars Movies</h1>
-       <ButtonGroup aria-label="Basic example">
-         <Button variant="light">1970's</Button>
-         <Button variant="light">1980's</Button>
-         <Button variant="light">1990's</Button>
-         <Button variant="light">2000's</Button>
-         <Button variant="light">2010's</Button>
-       </ButtonGroup>
+      return (
+        <div className="App">
+        <Container>
+          <Row className="justify-content-md-center">
+          <h1>Star Wars Movies</h1>
+          </Row>
+          <Row className="justify-content-md-center">
+            <ButtonGroup aria-label="Basic example">
+              <Button variant="light" className="decades" onClick={() => this.filter(0)}>All</Button>
+              <Button variant="light" className="decades" onClick={() => this.filter(1970)}>1970's</Button>
+              <Button variant="light" className="decades" onClick={() => this.filter(1980)}>1980's</Button>
+              <Button variant="light" className="decades" onClick={() => this.filter(1990)}>1990's</Button>
+              <Button variant="light" className="decades" onClick={() => this.filter(2000)}>2000's</Button>
+              <Button variant="light" className="decades" onClick={() => this.filter(2010)}>2010's</Button>
+            </ButtonGroup>
+          </Row>
 
-      {/* Fetch data from API */}
-      <div>
-      <Button variant="info" onClick={() => this.fetchData()}>Get data</Button>
-      <MovieList movies={this.state.movies}/>
-      {/* <Button variant="primary" onClick={fetchData}>Get data</Button> */}
-        <br />
-      </div>
+         <br />
+         
+          <Row className="justify-content-md-center">
+            <Col xs={7}>
+              {moviesList.map(movie => (<Movie movieID={movie} key={movie} />))}
 
-      {/* <div className="movies"> */}
-        {/* {movies && movies.map(movie => {
-          const { title, year, poster, imdb } = movie;
-            return (
-              <div className="movie" key={imdb}>
-                <h4>{title}</h4>
-
-                <div className="details">
-                  <p>⏰: {year}</p>
-                  <p>imdb: {imdb}</p>
-                  <a url="http://www.omdbapi.com/?i={imdb}&apikey=217a5d88">imdb: http://www.omdbapi.com/?i={imdb}&apikey=217a5d88</a>
-                  <img className="poster" src={poster} alt="Logo" />
-                  <Button variant="primary" onClick={() => this.getMovie(movie)}>Get movie info</Button>
-                </div>
-              </div>
-            );
-          })} */}
-        {/* {movies &&
-          movies.map((movie, index) => {
-            return (
-              <div className="movie" key={index}>
-                <h4>{movie.Title}</h4>
-
-                <div className="details">
-                  <p>⏰: {movie.Year}</p>
-                  <p>imdb: {movie.imdbID}</p>
-                  <img className="poster" src={movie.Poster} alt="Logo" />
-                  <Button variant="primary" onClick={() => this.getMovie(movie)}>Get movie info</Button>
-                </div>
-              </div>
-            );
-          })} */}
-      {/* </div> */}
-      {/* <div className="movies">
-        <MovieList movies={this.state.movies}></MovieList>
-      </div> */}
-
-    </div>
-  );
-    }
+            </Col>
+          </Row>
+         </Container>
+         <br />
+     </div>
+      );
+  }
 }
 
 export default App;
